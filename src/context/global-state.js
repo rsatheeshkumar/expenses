@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from "react";
+import React, { createContext, useReducer, useContext } from "react";
 import { AppReducer } from "./app-reducer";
 
 const initialState = {
@@ -38,4 +38,14 @@ export const GlobalProvider = ({ children }) => {
       {children}
     </GlobalContext.Provider>
   );
+};
+
+export const useGlobalContext = () => {
+  const context = useContext(GlobalContext);
+
+  if (!context) {
+    throw new Error(`useGlobalContext can be used with in GlobalProvider`);
+  }
+
+  return context;
 };

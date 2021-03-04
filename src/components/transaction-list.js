@@ -2,9 +2,10 @@ import React, { useContext } from "react";
 import { GlobalContext } from "../context/global-state";
 
 function moneyFormatter(num) {
+  console.log(num.toFixed(2).split(".")[0].reduce);
   let p = num.toFixed(2).split(".");
   return (
-    "$ " +
+    "$" +
     p[0]
       .split("")
       .reverse()

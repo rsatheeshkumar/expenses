@@ -1,18 +1,30 @@
-import React, { useState, useContext } from "react";
-import { GlobalContext } from "../context/global-state";
+import { useGlobalContext } from "../context/global-state";
+import { useMultiState } from "../hooks";
 
 const AddTransaction = () => {
-  const [text, setText] = useState("");
-  const [amount, setAmount] = useState(0);
-  const { addTransaction } = useContext(GlobalContext);
+  const [{ text, amount }, setState] = useMultiState({
+    text: "",
+    amount: 0,
+  });
+
+  const { addTransaction } = useGlobalContext();
   const handleSubmit = (e) => {
     e.preventDefault();
     const newTransaction = {
       id: Math.floor(Math.random() * 1000000),
       text: text,
-      amount: amount,
+      amount: Number(amount),
     };
     addTransaction(newTransaction);
+    setState({
+      text: "",
+      amount: 0,
+    });
+  };
+
+  const onChange = (e) => {
+    const { value, name } = e.target;
+    setState({ [name]: value });
   };
 
   return (
@@ -24,8 +36,9 @@ const AddTransaction = () => {
           <input
             type="text"
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={onChange}
             className="text"
+            name="text"
             placeholder="Enter text..."
           />
         </div>
@@ -37,12 +50,15 @@ const AddTransaction = () => {
           <input
             type="number"
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            name="amount"
+            onChange={onChange}
             className="amount"
             placeholder="Enter amount..."
           />
         </div>
-        <button className="btn">Add transaction</button>
+        <button type="submit" className="btn" disabled={!text}>
+          Add transaction
+        </button>
       </form>
     </>
   );
